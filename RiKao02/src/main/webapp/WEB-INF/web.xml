@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>12_ssh_demo1</display-name>
+  <welcome-file-list>
+    <welcome-file>login.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <!-- spring Filter -->
+  <filter>
+  	<filter-name>filter</filter-name>
+  	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+  	<init-param>
+  		<param-name>encoding</param-name>
+  		<param-value>utf-8</param-value>
+  	</init-param>
+  	
+  	<init-param>
+  		<!-- 
+			forceEncoding=true是意思是指无论客户端请求是否包含了编码，都用过滤器里的编码来解析请求 .
+  		 -->
+  		<param-name>forceEncoding</param-name>
+  		<param-value>true</param-value>
+  	</init-param>
+  	
+  </filter>
+  
+  <filter-mapping>
+  	<filter-name>filter</filter-name>
+  	<servlet-name>springmvc</servlet-name>
+  </filter-mapping>
+  
+  
+  <servlet>
+  	<servlet-name>springmvc</servlet-name>
+  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  	<!-- 默认加载配置文件的地址	/WEB-INF/springmvc-servlet.xml  -->
+  	<init-param>
+  		<param-name>contextConfigLocation</param-name>
+  		<param-value>classpath:applicationContext.xml</param-value>
+  	</init-param>
+  	<!-- 
+  		servlet的加载时机：
+		值必须是整数，当值大于0的时候在项目启动的时候就会加载这个servlet,
+		值越小优先级别越高，值相同的情况下按照配置顺序加载
+		当值小于0的时候，或者不配置的时候是在调用这个servlet的时候才会加载
+  	 -->
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>springmvc</servlet-name>
+  	<url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  
+</web-app>
