@@ -10,7 +10,7 @@ public class ArrestUtils {
 	*/
 	public static void IsTrue(boolean exp,String message){
 		if(!exp){
-			throw new CRunTimeExcpion(message);
+			throw new CRunTimeExcpion(message); 
 		}
 	}
 	
