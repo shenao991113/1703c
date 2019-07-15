@@ -11,7 +11,7 @@ public class TestUtils {
 	@Test
 	public void TestIsTrue01(){
 		try {
-			ArrestUtils.IsTrue(true, "断言不是真的");
+			ArrestUtils.IsTrue(true, "断言不是888真的");
 		} catch (CRunTimeExcpion e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
