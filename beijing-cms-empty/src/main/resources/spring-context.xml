@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans.xsd 
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context.xsd 
+			http://www.springframework.org/schema/oxm 
+			http://www.springframework.org/schema/oxm/spring-oxm.xsd 
+            http://www.springframework.org/schema/tx 
+            http://www.springframework.org/schema/tx/spring-tx.xsd 
+            http://www.springframework.org/schema/aop 
+            http://www.springframework.org/schema/aop/spring-aop.xsd 
+            http://www.springframework.org/schema/util 
+            http://www.springframework.org/schema/util/spring-util.xsd 
+            ">
+
+	<!-- 第1步：加载配置文件 -->
+	<context:property-placeholder location="classpath:db.properties"/>
+	
+	<!-- 第2步：扫描包，但要排除Web的bean，因为SpringMVC会再扫一次 -->
+	<context:component-scan base-package="com.shenao.cms">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="regex" expression="com\.shenao\.cms\.web\..*"/>
+	</context:component-scan>
+	
+	<!-- 第3步：配置数据源，常见的有dbcp、c3p0、阿里数据源、BoneCP -->
+	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource">
+		<!-- <property name="driverClass" value="com.mysql.jdbc.Driver"/> -->
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	<!-- 第4步：配置Mybatis -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="typeAliasesPackage" value="com.shenao.cms.domain" />
+		<!-- 配置mapper扫描文件的扫描位置 -->
+		<property name="mapperLocations">
+			<value>classpath:mappers/*.xml</value>
+		</property>
+		
+		<!-- spring整合分页插件 -->
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageHelper">
+					<property name="properties">
+						<props>
+							<prop key="dialect">mysql</prop>
+							<prop key="supportMethodsArguments">true</prop>
+						</props>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+	
+	<!-- 第5步：扫描并装配Mapper接口 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.shenao.cms.dao"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+	
+	<!-- 第6步：打开事务 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5"/>
+		<property name="maxPoolSize" value="20"/>
+	</bean>
+</beans>

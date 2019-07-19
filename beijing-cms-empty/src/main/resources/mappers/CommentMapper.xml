@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shenao.cms.dao.CommentMapper">
+
+  
+  <insert id="save" parameterType="comment">
+    insert into cms_comment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="content != null">
+        content,
+      </if>
+      <if test="article != null">
+        blog_id,
+      </if>
+      <if test="displayTime != null">
+        displayTime,
+      </if>
+      <if test="user != null">
+        user_id,
+      </if>
+    </trim>
+ 
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="article != null">
+        #{article.id,jdbcType=INTEGER},
+      </if>
+      <if test="displayTime != null">
+        #{displayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="user != null">
+        #{user.id,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

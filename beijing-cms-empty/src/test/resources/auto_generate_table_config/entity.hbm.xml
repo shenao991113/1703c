@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping package="com.shenao.cms.domain">
+	<class name="User" table="cms_user">
+		<id name="id" type="java.lang.Integer">
+			<column name="id"/>
+			<generator class="identity" />
+		</id>
+		<property name="username" column="username" type="string" length="64" not-null="true" index="idx_user_account" unique="true"/>
+		<property name="password" column="password" type="string" length="32" not-null="true"/>
+		<property name="nickname" column="nickname" type="string" length="50"/>
+		<property name="birthday" column="birthday" type="date"/><!-- date|time|timestamp -->
+		<property name="gender" column="gender">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.shenao.cms.metas.Gender</param>
+				<param name="useNamed">false</param>
+			</type>
+		</property>
+		<property name="locked" type="boolean" column="locked"/>
+		<property name="created" column="created" type="date" not-null="true"/>
+		<property name="updated" column="updated" type="date" not-null="true"/>
+		<!-- date|time|timestamp -->
+	</class>
+	
+	<!-- 文章表 -->
+	<class name="Article" table="cms_article">
+		<id name="id" type="java.lang.Integer">
+			<column name="id"/>
+			<generator class="identity" />
+		</id>
+		<property name="title" column="title" type="string" length="128"/>
+		<property name="summary" column="summary" type="string" length="144"/>
+		<property name="content" column="content" type="materialized_clob"/>
+		<property name="picture" column="picture" type="string" length="50"/>
+        <property name="hits" column="hits" type="int"/>
+        <property name="hot" type="boolean" column="hot"/>
+        <property name="status" column="status" type="int"/>
+        <property name="deleted" type="boolean" column="deleted"/>
+        <property name="created" column="created" type="timestamp"/>
+        <property name="updated" column="updated" type="timestamp"/>
+        
+		<many-to-one name="channel" column="channel_id" class="Channel" fetch="select" not-null="false"/>
+		<many-to-one name="category" column="category_id" class="Category" fetch="select" not-null="false"/>
+		<many-to-one name="author" column="user_id" class="User" fetch="select" not-null="false"/>
+	</class>
+	
+	<!-- 频道表 -->
+	<class name="Channel" table="cms_channel">
+		<id name="id" type="java.lang.Integer">
+			<column name="id"/>
+			<generator class="identity" />
+		</id>
+		<property name="name" column="name" type="string" length="64"/>
+		<property name="description" column="description" type="string" length="500"/>
+		<property name="icon" column="icon" type="string" length="30"/>
+        <property name="sorted" column="sorted" type="int"/>
+	</class>
+	
+	<!-- 分类表 -->
+	<class name="Category" table="cms_category">
+		<id name="id" type="java.lang.Integer">
+			<column name="id"/>
+			<generator class="identity" />
+		</id>
+		<property name="name" column="name" type="string" length="50"/>
+        <property name="sorted" column="sorted" type="int"/>
+		<many-to-one name="channel" column="channel_id" class="Channel" fetch="select" not-null="false"/>
+	</class>
+	
+	<!-- 广告表 -->
+	<class name="Slide" table="cms_slide">
+		<id name="id" type="java.lang.Integer">
+			<column name="id"/>
+			<generator class="identity" />
+		</id>
+		<property name="title" column="title" type="string" length="50"/>
+		<property name="picture" column="picture" type="string" length="100"/>
+		<property name="url" column="url" type="string" length="100"/>
+		<property name="created" column="created" type="date" not-null="true"/>
+	</class>
+	
+	<!-- 设置表 -->
+	<class name="Settings" table="cms_settings">
+		<id name="id" type="java.lang.Integer">
+			<column name="id"/>
+		</id>
+		<property name="siteDomain" column="site_domain" type="string" length="50"/>
+		<property name="siteName" column="site_name" type="string" length="50"/>
+		<property name="articleListSize" column="article_list_size" type="int"/>
+		<property name="slideSize" column="slide_size" type="int"/>
+		<property name="adminUsername" column="admin_username" type="string" length="32"/>
+		<property name="adminPassword" column="admin_password" type="string" length="32"/>
+	</class>
+	
+</hibernate-mapping>

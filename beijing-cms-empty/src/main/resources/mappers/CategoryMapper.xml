@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shenao.cms.dao.CategoryMapper">
+  
+  <resultMap id="BaseResultMap" type="com.shenao.cms.domain.Category">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sorted" jdbcType="INTEGER" property="sorted"/>
+    
+    <result column="channel_id" jdbcType="INTEGER" property="channel.id"/>
+    <result column="channel_name" jdbcType="INTEGER" property="channel.name"/>
+    
+    <!-- 
+    <association property="channel">
+    	<id column="channel_id" property="id" jdbcType="INTEGER"/>
+    	<result column="name" property="name" jdbcType="VARCHAR" />
+    </association>
+    -->
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, name, channel_id, sorted
+  </sql>
+
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cms_category
+    order by sorted asc
+  </select>
+  
+  
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cms_category
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByChannel" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cms_category
+    where channel_id = #{channel_id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from cms_category where id = #{id,jdbcType=INTEGER}
+  </delete>
+ 
+  <insert id="insert" parameterType="com.shenao.cms.domain.Category">
+    insert into cms_category
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="sorted != null">
+        sorted,
+      </if>
+      <if test="channel != null">
+        channel_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sorted != null">
+        #{sorted,jdbcType=INTEGER},
+      </if>
+      <if test="channel != null">
+        #{channel.id,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>

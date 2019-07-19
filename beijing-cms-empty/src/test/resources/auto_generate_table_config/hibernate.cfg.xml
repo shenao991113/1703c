@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="GBK"?>
+<!-- 指定Hibernate配置文件的DTD信息 -->  
+<!DOCTYPE hibernate-configuration PUBLIC  
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"  
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+    
+<!-- hibernate- configuration是连接配置文件的根元素 -->
+<hibernate-configuration>
+	<session-factory>
+		<!-- 指定连接数据库所用的驱动 -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		
+		<!-- 程序自动读取classpath下db.properties配置文件的数据库配置信息 -->
+		
+		<!-- 指定数据库方言 -->
+		<property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+		<!-- 根据需要自动创建数据表 -->
+		<property name="hbm2ddl.auto">create</property>
+		<!-- 显示Hibernate持久化操作所生成的SQL -->
+		<property name="show_sql">false</property>
+		<!-- 将SQL脚本进行格式化后再输出 -->
+		<property name="hibernate.format_sql">true</property>
+		<!-- <property name="connection.SetBigStringTryClob">true</property> -->
+		<!-- 罗列所有的映射文件 -->
+		<mapping resource="auto_generate_table_config/entity.hbm.xml" />
+	</session-factory>
+</hibernate-configuration>  

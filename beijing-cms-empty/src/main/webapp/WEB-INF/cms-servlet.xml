@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans.xsd 
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context.xsd 
+			http://www.springframework.org/schema/oxm 
+			http://www.springframework.org/schema/oxm/spring-oxm.xsd 
+            http://www.springframework.org/schema/aop 
+            http://www.springframework.org/schema/aop/spring-aop.xsd 
+            http://www.springframework.org/schema/util 
+            http://www.springframework.org/schema/util/spring-util.xsd 
+			http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd
+            ">
+	<!-- 第1步：扫描Controller -->
+	<context:component-scan base-package="com.shenao.cms.web"/>
+	
+	<!-- 第2步：打开注解驱动 -->
+	<mvc:annotation-driven/>
+	
+	<!-- 第3步：视图解析器 -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/view/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<!-- 第4步：配置拦截器
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/my/**"/>
+			<bean class="com.shenao.cms.web.interceptors.FrontInterceptor"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/**"/>
+			<bean class="com.shenao.cms.web.interceptors.AdminInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	 -->
+	 
+	<!-- 第5步：配置上传 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    	<property name="defaultEncoding" value="UTF-8"/>
+    	<!-- Set the maximum allowed size (in bytes) before uploads are refused. -1 indicates no limit (the default). -->
+    	<property name="maxUploadSize" value="1024000"/>
+    	<property name="maxInMemorySize" value="1024000"/>
+    	<property name="uploadTempDir" value="temp"/>
+    	<!-- <property name="resolveLazily" value="true"/> -->
+    </bean>
+	
+</beans>
